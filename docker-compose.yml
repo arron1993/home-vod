@@ -1,0 +1,9 @@
+version: "2.0"
+services:
+  nginx:
+    build:
+      context: nginx-vod/.
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-vod/videos/:/opt/static/videos/
