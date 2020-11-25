@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func list(w http.ResponseWriter, req *http.Request) {
@@ -16,7 +17,7 @@ func list(w http.ResponseWriter, req *http.Request) {
 	path = root + path
 
 	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		files = append(files, path)
+		files = append(files, strings.Replace(path, root, "", -1))
 		return nil
 	})
 	w.Header().Set("Content-Type", "application/json")

@@ -1,2 +1,7 @@
-<video (click)="togglePlay()" id="video"></video>
+<div class="file-list">
+  <button (click)="selectFile(file)" *ngFor="let file of files">
+    {{ file }}
+  </button>
+</div>
+<video id="video" controls></video>
 <router-outlet></router-outlet>

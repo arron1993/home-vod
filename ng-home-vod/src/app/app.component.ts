@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FileService } from './services/file.service';
 
 import * as HLS from 'hls.js';
 
@@ -12,17 +13,18 @@ export class AppComponent implements OnInit {
 
   video: any;
 
-  ngOnInit() {
-    this.video = document.querySelector('#video') as HTMLVideoElement;
-    
-    const videoSrc = '/hls/leaf.mp4/index.m3u8';
+  files: any[] = []
+  constructor(private fs: FileService) {}
 
-    console.log(videoSrc)
-    if (HLS.isSupported()) {
-      const hls = new HLS();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(this.video);
-    }
+  ngOnInit() {
+    
+    
+
+
+    this.fs.get("/").subscribe((files: any[]) => {
+      this.files = files;
+      console.log(this.files);
+    })
   }
 
   togglePlay() {
@@ -31,6 +33,19 @@ export class AppComponent implements OnInit {
       this.video.play()
     } else {
       this.video.pause();
+    }
+  }
+
+  selectFile(file: string) {
+    this.videoSrc = file;
+  }
+
+  set videoSrc(file: string) {
+    this.video = document.querySelector('#video') as HTMLVideoElement;
+    if (HLS.isSupported()) {
+      const hls = new HLS();
+      hls.loadSource(`/hls/${file}/index.m3u8`);
+      hls.attachMedia(this.video);
     }
   }
 }
