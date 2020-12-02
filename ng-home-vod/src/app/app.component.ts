@@ -17,9 +17,6 @@ export class AppComponent implements OnInit {
   constructor(private fs: FileService) {}
 
   ngOnInit() {
-    
-    
-
 
     this.fs.get("/").subscribe((files: any[]) => {
       this.files = files;
@@ -45,6 +42,9 @@ export class AppComponent implements OnInit {
     if (HLS.isSupported()) {
       const hls = new HLS();
       hls.loadSource(`/hls/${file}/index.m3u8`);
+      hls.on(HLS.Events.MANIFEST_PARSED, function (event, data) {
+        console.log(data);
+      });
       hls.attachMedia(this.video);
     }
   }

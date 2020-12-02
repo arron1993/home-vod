@@ -6,18 +6,22 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
+	"strconv"
 )
 
 func list(w http.ResponseWriter, req *http.Request) {
-	var files []string
+	type FileDetail map[string]interface{}
+	var files []FileDetail
 	root := "/home/arron/projects/home-vod/nginx-vod/videos"
 
 	path := req.URL.Query()["path"][0]
 	path = root + path
 
 	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		files = append(files, strings.Replace(path, root, "", -1))
+		tmp := FileDetail{
+			"name":   info.Name(),
+			"folder": strconv.FormatBool(info.IsDir())}
+		files = append(files, tmp)
 		return nil
 	})
 	w.Header().Set("Content-Type", "application/json")
@@ -25,7 +29,6 @@ func list(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Println("Hello World")
 
 	http.HandleFunc("/api/list", list)
 
