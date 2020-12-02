@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
 
     this.fs.get("/").subscribe((files: any[]) => {
       this.files = files;
-      console.log(this.files);
     })
   }
 
