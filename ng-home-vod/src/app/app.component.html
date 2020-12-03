@@ -1,6 +1,6 @@
 <div class="row no-gutters">
   <div
-    class="col-2"
+    class="col-2 p-3"
     (click)="selectFile(file)"
     *ngFor="let file of files"
     [ngClass]="{ folder: file.isFolder === 'true' }"
@@ -9,5 +9,8 @@
     {{ file.name }}
   </div>
 </div>
-<video id="video" controls></video>
+<div class="container text-center">
+  <video id="video" controls></video>
+</div>
+
 <router-outlet></router-outlet>

@@ -15,13 +15,16 @@ func list(w http.ResponseWriter, req *http.Request) {
 	root := "/home/arron/projects/home-vod/nginx-vod/videos"
 
 	path := req.URL.Query()["path"][0]
-	path = root + path
+	walkPath := root + path
 
-	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		tmp := FileDetail{
-			"name":     info.Name(),
-			"isFolder": strconv.FormatBool(info.IsDir())}
-		files = append(files, tmp)
+	filepath.Walk(walkPath, func(path string, info os.FileInfo, err error) error {
+		if path != walkPath {
+			tmp := FileDetail{
+				"name":     info.Name(),
+				"isFolder": strconv.FormatBool(info.IsDir())}
+			files = append(files, tmp)
+		}
+
 		return nil
 	})
 	w.Header().Set("Content-Type", "application/json")
