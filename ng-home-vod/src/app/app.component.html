@@ -1,7 +1,13 @@
-<div class="file-list">
-  <button (click)="selectFile(file)" *ngFor="let file of files">
+<div class="row no-gutters">
+  <div
+    class="col-2"
+    (click)="selectFile(file)"
+    *ngFor="let file of files"
+    [ngClass]="{ folder: file.isFolder === 'true' }"
+  >
+    <fa-icon *ngIf="file.isFolder === 'true'" [icon]="faFolder"></fa-icon>
     {{ file.name }}
-  </button>
+  </div>
 </div>
 <video id="video" controls></video>
 <router-outlet></router-outlet>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FileService } from './services/file.service';
+import { faFolder } from '@fortawesome/free-solid-svg-icons';
 
 import * as HLS from 'hls.js';
 
@@ -10,7 +11,7 @@ import * as HLS from 'hls.js';
 })
 export class AppComponent implements OnInit {
   title = 'Home VOD';
-
+  faFolder = faFolder;
   video: any;
 
   files: any[] = []
@@ -23,24 +24,15 @@ export class AppComponent implements OnInit {
     })
   }
 
-  togglePlay() {
-    console.log("Toggle")
-    if (this.video.paused) {
-      this.video.play()
-    } else {
-      this.video.pause();
-    }
-  }
-
   selectFile(file: string) {
     this.videoSrc = file;
   }
 
-  set videoSrc(file: string) {
+  set videoSrc(file: any) {
     this.video = document.querySelector('#video') as HTMLVideoElement;
     if (HLS.isSupported()) {
       const hls = new HLS();
-      hls.loadSource(`/hls/${file}/index.m3u8`);
+      hls.loadSource(`/hls/${file.name}/index.m3u8`);
       hls.on(HLS.Events.MANIFEST_PARSED, function (event, data) {
         console.log(data);
       });

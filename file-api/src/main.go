@@ -19,8 +19,8 @@ func list(w http.ResponseWriter, req *http.Request) {
 
 	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		tmp := FileDetail{
-			"name":   info.Name(),
-			"folder": strconv.FormatBool(info.IsDir())}
+			"name":     info.Name(),
+			"isFolder": strconv.FormatBool(info.IsDir())}
 		files = append(files, tmp)
 		return nil
 	})
