@@ -3,32 +3,35 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
-	"path/filepath"
 	"strconv"
 )
 
 func list(w http.ResponseWriter, req *http.Request) {
 	type FileDetail map[string]interface{}
-	var files []FileDetail
+	var fileDetails []FileDetail
 	root := "/home/arron/projects/home-vod/nginx-vod/videos"
 
 	path := req.URL.Query()["path"][0]
-	walkPath := root + path
+	path = root + path
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+	}
 
-	filepath.Walk(walkPath, func(path string, info os.FileInfo, err error) error {
-		if path != walkPath {
-			tmp := FileDetail{
-				"name":     info.Name(),
-				"isFolder": strconv.FormatBool(info.IsDir())}
-			files = append(files, tmp)
-		}
+	for _, file := range files {
+		isDir := file.Mode()&os.ModeSymlink != 0 || file.IsDir()
+		tmp := FileDetail{
+			"name":     file.Name(),
+			"isFolder": strconv.FormatBool(isDir)}
+		fmt.Println()
+		fileDetails = append(fileDetails, tmp)
+	}
 
-		return nil
-	})
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(files)
+	json.NewEncoder(w).Encode(fileDetails)
 }
 
 func main() {
