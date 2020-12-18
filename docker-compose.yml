@@ -7,3 +7,10 @@ services:
       - "8080:80"
     volumes:
       - ./nginx-vod/videos/:/opt/static/videos/
+  go-file-api:
+    build:
+      context: go-file-api/.
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./nginx-vod/videos/:/opt/static/videos/
