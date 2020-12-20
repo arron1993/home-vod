@@ -1,1 +1,1 @@
-nginx-vod/videos
+nginx-vod/videos/**/*.mp4
