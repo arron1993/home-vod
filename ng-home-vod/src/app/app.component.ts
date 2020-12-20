@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
   videoElem: any;
 
   _videoSrc: any;
-
   _path: string[] = [];
 
   files: any[] = []
@@ -25,7 +24,22 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updatePath({"isFolder": "true", "name": "/"});
+    const lastVideo = window.localStorage.getItem("_videoSrc")
+    const lastPath = window.localStorage.getItem("_path")
+
+    if (lastPath) {
+      console.log(lastPath)
+      this._path = JSON.parse(lastPath);
+      this.getFiles();
+    } else {
+      this.updatePath("/");  
+    }
+
+    if (lastVideo) {
+      this.videoSrc = JSON.parse(lastVideo);
+    }
+    
+    
   }
 
   selectFile(file: any) {
@@ -33,16 +47,21 @@ export class AppComponent implements OnInit {
       this.videoSrc = file;
     }
     else {
-      this.updatePath(file);
+      this.updatePath(file.name);
     }      
   }
 
   updatePath(folder?: any) {
     if (folder) {
-      this._path.push(folder.name);
+      this._path.push(folder);
     } else {
       this._path.pop();
     }
+    window.localStorage.setItem("_path", JSON.stringify(this._path));
+    this.getFiles();
+  }
+
+  getFiles() {
     this.fs.get(this.join(this._path)).subscribe((files: any[]) => {          
       this.files = files.sort(function(a, b) {
         return a.name.localeCompare(b.name, undefined, {
@@ -63,6 +82,7 @@ export class AppComponent implements OnInit {
 
   set videoSrc(file: any) {
     this._videoSrc = file;
+    window.localStorage.setItem("_videoSrc", JSON.stringify(file));
     this.videoElem = document.querySelector('#video') as HTMLVideoElement;
     if (HLS.isSupported()) {
       const hls = new HLS();
