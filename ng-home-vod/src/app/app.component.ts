@@ -13,17 +13,19 @@ export class AppComponent implements OnInit {
   title = 'Home VOD';
   faFolder = faFolder;
   faVideo = faVideo;
-  video: any;
+  videoElem: any;
 
-  _path = ["/"];
+  _videoSrc: any;
+
+  _path: string[] = [];
 
   files: any[] = []
-  constructor(private fs: FileService) {}
+  constructor(private fs: FileService) {
+
+  }
 
   ngOnInit() {
-    this.fs.get(this.join(this._path)).subscribe((files: any[]) => {
-      this.files = files;
-    })   
+    this.updatePath({"isFolder": "true", "name": "/"});
   }
 
   selectFile(file: any) {
@@ -41,8 +43,13 @@ export class AppComponent implements OnInit {
     } else {
       this._path.pop();
     }
-    this.fs.get(this.join(this._path)).subscribe((files: any[]) => {
-      this.files = files;
+    this.fs.get(this.join(this._path)).subscribe((files: any[]) => {          
+      this.files = files.sort(function(a, b) {
+        return a.name.localeCompare(b.name, undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        });
+      });
     })    
   }
 
@@ -50,8 +57,13 @@ export class AppComponent implements OnInit {
     return this.join(this._path);
   }
 
+  get videoSrc()  {
+    return this._videoSrc;
+  }
+
   set videoSrc(file: any) {
-    this.video = document.querySelector('#video') as HTMLVideoElement;
+    this._videoSrc = file;
+    this.videoElem = document.querySelector('#video') as HTMLVideoElement;
     if (HLS.isSupported()) {
       const hls = new HLS();
       const path = this.join(["hls", this.folder, file.name, "index.m3u8"])
@@ -59,7 +71,7 @@ export class AppComponent implements OnInit {
       hls.on(HLS.Events.MANIFEST_PARSED, function (event, data) {
         console.log(data);
       });
-      hls.attachMedia(this.video);
+      hls.attachMedia(this.videoElem);
     }
   }
 
