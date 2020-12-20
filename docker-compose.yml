@@ -1,6 +1,6 @@
 version: "2.0"
 services:
-  nginx:
+  nginx-vod:
     build:
       context: nginx-vod/.
     ports:
@@ -11,6 +11,11 @@ services:
     build:
       context: go-file-api/.
     ports:
-      - "8090:8090"
+      - "8090:80"
     volumes:
       - ./nginx-vod/videos/:/opt/static/videos/
+  ng-home-vod:
+    build:
+      context: ng-home-vod/.
+    ports:
+      - "80:80"

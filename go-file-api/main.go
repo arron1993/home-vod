@@ -14,12 +14,22 @@ func getRootDir() string {
 	if os.Getenv("ENV") == "dev" {
 		root = "/home/arron/projects/home-vod/nginx-vod/videos"
 	} else {
-		root = "/opt/static/videos/"
+		root = "/opt/static/videos"
 	}
 	return root
 }
 
-func list(w http.ResponseWriter, req *http.Request) {
+func getListeningPort() string {
+	var port string
+	if os.Getenv("ENV") == "dev" {
+		port = "8090"
+	} else {
+		port = "80"
+	}
+	return port
+}
+
+func files(w http.ResponseWriter, req *http.Request) {
 	type FileDetail map[string]interface{}
 	var fileDetails []FileDetail
 	root := getRootDir()
@@ -27,7 +37,7 @@ func list(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Query()["path"][0]
 	path = root + path
 	files, err := ioutil.ReadDir(path)
-
+	fmt.Println("Read Path", path)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
@@ -37,7 +47,7 @@ func list(w http.ResponseWriter, req *http.Request) {
 		tmp := FileDetail{
 			"name":     file.Name(),
 			"isFolder": strconv.FormatBool(isDir)}
-		fmt.Println()
+
 		fileDetails = append(fileDetails, tmp)
 	}
 
@@ -47,9 +57,12 @@ func list(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 
-	http.HandleFunc("/api/list", list)
+	http.HandleFunc("/api/files", files)
 
-	fmt.Println("Server started on port 8090...")
+	fmt.Println("Server started on port", getListeningPort())
 	fmt.Println("Looking for files in ", getRootDir())
-	http.ListenAndServe(":8090", nil)
+
+	listeningPort := fmt.Sprintf(":%s", getListeningPort())
+
+	http.ListenAndServe(listeningPort, nil)
 }
