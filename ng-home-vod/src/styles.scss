@@ -1,2 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/scss/bootstrap";
+
+@import "./variables";
+
+body {
+  background-color: $grey;
+  color: $white;
+
+  .btn {
+    color: $white;
+    transition: 0.3s linear;
+    &:hover {
+      color: inherit;
+    }
+  }
+}

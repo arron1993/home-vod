@@ -1,29 +1,40 @@
 <div class="row no-gutters">
-  <div class="col-10 p-5">
-    <div *ngIf="videoSrc">
+  <div class="col-9 pl-5 py-5">
+    <div *ngIf="videoSrc" class="pb-3 mb-4 border-bottom">
       <h1>{{ videoSrc.name }}</h1>
     </div>
-    <video id="video" controls></video>
+    <div class="d-flex justify-content-center">
+      <video id="video" controls></video>
+    </div>
   </div>
 
-  <div class="col-2 video-list">
+  <div class="col-3 video-list border-left">
     <div class="row no-gutters">
-      <div class="col-12 p-3" *ngIf="folder != '/'">
+      <div class="col-12 py-3 px-4" *ngIf="folder != '/'">
         <button (click)="updatePath()" class="btn">Back</button>
       </div>
       <div
-        class="col-12 p-3"
+        class="video col-12 py-3 px-4"
         *ngFor="let file of files"
         [ngClass]="{
           folder: file.isFolder === 'true',
           selected: file == videoSrc
         }"
+        (click)="selectFile(file)"
       >
-        <button class="btn" (click)="selectFile(file)">
-          <fa-icon *ngIf="file.isFolder === 'true'" [icon]="faFolder"></fa-icon>
-          <fa-icon *ngIf="file.isFolder === 'false'" [icon]="faVideo"></fa-icon>
-          {{ file.name }}
-        </button>
+        <fa-icon
+          class="mr-2"
+          *ngIf="file.isFolder === 'true'"
+          [icon]="faFolder"
+          size="lg"
+        ></fa-icon>
+        <fa-icon
+          class="mr-2"
+          *ngIf="file.isFolder === 'false'"
+          [icon]="faVideo"
+          size="lg"
+        ></fa-icon>
+        {{ file.name }}
       </div>
     </div>
   </div>

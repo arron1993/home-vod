@@ -1,3 +1,5 @@
+@import "../variables";
+
 video {
   height: 50vh;
 }
@@ -5,4 +7,16 @@ video {
 .video-list {
   height: 100vh;
   overflow-y: scroll;
+  color: $white;
+  .selected {
+    background-color: $green;
+  }
+
+  .video {
+    transition: 0.3s linear;
+    cursor: pointer;
+    &:hover {
+      background-color: $green;
+    }
+  }
 }

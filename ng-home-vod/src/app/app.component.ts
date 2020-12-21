@@ -19,27 +19,22 @@ export class AppComponent implements OnInit {
   _path: string[] = [];
 
   files: any[] = []
-  constructor(private fs: FileService) {
-
-  }
+  constructor(private fs: FileService) {}
 
   ngOnInit() {
     const lastVideo = window.localStorage.getItem("_videoSrc")
     const lastPath = window.localStorage.getItem("_path")
 
+    if (lastVideo) {
+      this.videoSrc = JSON.parse(lastVideo);
+    }
+    
     if (lastPath) {
-      console.log(lastPath)
       this._path = JSON.parse(lastPath);
       this.getFiles();
     } else {
       this.updatePath("/");  
     }
-
-    if (lastVideo) {
-      this.videoSrc = JSON.parse(lastVideo);
-    }
-    
-    
   }
 
   selectFile(file: any) {
