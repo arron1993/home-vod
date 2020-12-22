@@ -4,14 +4,4 @@
 @import "./variables";
 
 body {
-  background-color: $grey;
-  color: $white;
-
-  .btn {
-    color: $white;
-    transition: 0.3s linear;
-    &:hover {
-      color: inherit;
-    }
-  }
 }

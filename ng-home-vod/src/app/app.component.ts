@@ -25,12 +25,13 @@ export class AppComponent implements OnInit {
     const lastVideo = window.localStorage.getItem("_videoSrc")
     const lastPath = window.localStorage.getItem("_path")
 
-    if (lastVideo) {
-      this.videoSrc = JSON.parse(lastVideo);
-    }
+    
     
     if (lastPath) {
       this._path = JSON.parse(lastPath);
+      if (lastVideo) {
+        this.videoSrc = JSON.parse(lastVideo);
+      }
       this.getFiles();
     } else {
       this.updatePath("/");  
